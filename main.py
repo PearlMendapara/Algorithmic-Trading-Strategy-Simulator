@@ -82,6 +82,8 @@ def main() -> None:
                         help="JSON file of {company: price}; runs offline and skips prediction")
     parser.add_argument("--no-excel", action="store_true", help="skip the Excel report")
     args = parser.parse_args()
+    if args.budget is not None and args.budget <= 0:
+        parser.error("--budget must be a positive whole number")
 
     print("=" * 60)
     print("ALGORITHMIC TRADING STRATEGY SIMULATOR")
@@ -89,7 +91,10 @@ def main() -> None:
 
     prediction, prediction_plot = None, None
     if args.prices:
-        prices = json.loads(args.prices.read_text())
+        try:
+            prices = {name: float(p) for name, p in json.loads(args.prices.read_text()).items()}
+        except (OSError, ValueError, TypeError, AttributeError) as exc:
+            parser.error(f"could not read prices from {args.prices}: {exc}")
         print(f"\nUsing prices from {args.prices}")
     else:
         from simulator.data import fetch_history, get_current_prices
