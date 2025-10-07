@@ -8,6 +8,9 @@ Live data from Yahoo Finance (interactive prompts):
 Live data, no prompts:
     python main.py --company TCS --budget 500000
 
+Forecast a week ahead instead of one day:
+    python main.py --company TCS --budget 500000 --days-ahead 7
+
 Offline, with prices from a JSON file (no network needed; skips prediction):
     python main.py --budget 500000 --prices examples/sample_prices.json
 """
@@ -80,10 +83,14 @@ def main() -> None:
     parser.add_argument("--budget", type=int, help="investment budget in ₹")
     parser.add_argument("--prices", type=Path,
                         help="JSON file of {company: price}; runs offline and skips prediction")
+    parser.add_argument("--days-ahead", type=int, default=1,
+                        help="forecast horizon in calendar days (default: 1)")
     parser.add_argument("--no-excel", action="store_true", help="skip the Excel report")
     args = parser.parse_args()
     if args.budget is not None and args.budget <= 0:
         parser.error("--budget must be a positive whole number")
+    if args.days_ahead < 1:
+        parser.error("--days-ahead must be at least 1")
 
     print("=" * 60)
     print("ALGORITHMIC TRADING STRATEGY SIMULATOR")
@@ -116,10 +123,11 @@ def main() -> None:
         print(f"STOCK PRICE PREDICTION — {company}")
         print("=" * 60)
         close = fetch_history(ticker, period="90d")
-        prediction = {"Stock": ticker, **fit_and_predict(close, days_ahead=1)}
-        prediction_plot = plot_prediction(close, prediction["Predicted Price"], ticker, 1, OUT_DIR)
+        prediction = {"Stock": ticker, **fit_and_predict(close, days_ahead=args.days_ahead)}
+        prediction_plot = plot_prediction(close, prediction["Predicted Price"], ticker,
+                                          args.days_ahead, OUT_DIR)
         print(f"  Current price       : ₹{prediction['Current Price']:,.2f}")
-        print(f"  Predicted (1 day)   : ₹{prediction['Predicted Price']:,.2f}")
+        print(f"  Predicted (+{args.days_ahead}d)     : ₹{prediction['Predicted Price']:,.2f}")
         print(f"  Test MSE (last 20%) : {prediction['Test MSE']:.2f}")
 
     print("\n" + "=" * 60)

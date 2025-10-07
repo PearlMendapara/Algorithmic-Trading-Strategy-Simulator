@@ -85,6 +85,7 @@ pip install -r requirements.txt
 ```bash
 python main.py                                  # interactive prompts
 python main.py --company TCS --budget 500000    # no prompts
+python main.py --company TCS --budget 500000 --days-ahead 7   # week-ahead forecast
 ```
 
 **Offline**, using the illustrative prices in `examples/` (skips prediction):
