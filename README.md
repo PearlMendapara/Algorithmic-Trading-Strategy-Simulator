@@ -1,5 +1,7 @@
 # Algorithmic Trading Strategy Simulator
 
+[![tests](https://github.com/PearlMendapara/Algorithmic-Trading-Strategy-Simulator/actions/workflows/tests.yml/badge.svg)](https://github.com/PearlMendapara/Algorithmic-Trading-Strategy-Simulator/actions/workflows/tests.yml)
+
 An end-to-end simulator for Indian (NSE) stocks. It forecasts next-day prices
 with linear regression, then allocates a budget across stocks by treating
 portfolio construction as an **unbounded knapsack problem**. The allocation is
@@ -67,7 +69,10 @@ prices are large relative to the budget.
 │   ├── prediction.py              linear-trend price forecast
 │   ├── optimization.py            greedy and DP knapsack solvers
 │   └── reporting.py               Excel report with embedded charts
-├── tests/test_optimization.py     DP checked against brute force on 200 random cases
+├── tests/
+│   ├── test_optimization.py       DP checked against brute force on 200 random cases
+│   ├── test_prediction.py         price model recovers known linear trends
+│   └── test_pipeline.py           price → stock conversion and Excel report
 ├── benchmarks/compare_algorithms.py   optimality gap and runtime experiments
 ├── results/                       benchmark output
 ├── examples/sample_prices.json    illustrative prices for offline runs
