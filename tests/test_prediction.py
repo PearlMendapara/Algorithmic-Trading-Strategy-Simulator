@@ -38,3 +38,8 @@ def test_uses_calendar_days_not_row_positions():
     close = pd.Series(50.0 + 0.5 * days, index=index)
     result = fit_and_predict(close, days_ahead=1)
     assert result["Daily Trend"] == pytest.approx(0.5)
+
+
+def test_rejects_too_few_prices():
+    with pytest.raises(ValueError):
+        fit_and_predict(linear_series(days=4))

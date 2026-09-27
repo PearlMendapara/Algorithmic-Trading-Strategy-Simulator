@@ -24,6 +24,8 @@ def fit_and_predict(close: pd.Series, days_ahead: int = 1, test_size: float = 0.
     earliest (1 - test_size) share of days and evaluated on the most recent
     ones, so the test error measures genuine out-of-sample forecasting.
     """
+    if len(close) < 5:
+        raise ValueError(f"need at least 5 closing prices to fit a trend, got {len(close)}")
     days = (close.index - close.index.min()).days.to_numpy().reshape(-1, 1)
     prices = close.to_numpy()
 
