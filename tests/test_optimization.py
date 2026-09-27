@@ -77,3 +77,15 @@ def test_rejects_non_positive_cost():
         dp_allocation([("A", 0, 5)], 10)
     with pytest.raises(ValueError):
         greedy_allocation([("A", -2, 5)], 10)
+
+
+def test_rejects_negative_budget():
+    for solver in (greedy_allocation, dp_allocation):
+        with pytest.raises(ValueError):
+            solver([("A", 3, 4)], -1)
+
+
+def test_rejects_negative_value():
+    for solver in (greedy_allocation, dp_allocation):
+        with pytest.raises(ValueError):
+            solver([("A", 3, -4)], 10)
