@@ -22,6 +22,7 @@ import json
 import time
 from pathlib import Path
 
+from simulator import __version__
 from simulator.config import COMPANIES
 from simulator.optimization import Stock, dp_allocation, greedy_allocation, Allocation
 
@@ -86,6 +87,7 @@ def main() -> None:
     parser.add_argument("--days-ahead", type=int, default=1,
                         help="forecast horizon in calendar days (default: 1)")
     parser.add_argument("--no-excel", action="store_true", help="skip the Excel report")
+    parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     args = parser.parse_args()
     if args.budget is not None and args.budget <= 0:
         parser.error("--budget must be a positive whole number")
